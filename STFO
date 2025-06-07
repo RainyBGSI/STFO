@@ -1,77 +1,56 @@
-local Window = Rayfield:CreateWindow({
-   Name = "STS Script By Rainy",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
-   LoadingTitle = "Loading...",
-   LoadingSubtitle = "STFO Script",
-   Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
-   ToggleUIKeybind = "L", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
-   DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+-- LIBRARY
 
-   ConfigurationSaving = {
-      Enabled = false,
-      FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "STFOConfig"
-   },
+WindUI:SetNotificationLower(true)
 
-   Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
-   },
+WindUI:SetTheme("Dark")
 
-   KeySystem = false, -- Set this to true to use our key system
-   KeySettings = {
-      Title = "Untitled",
-      Subtitle = "Key System",
-      Note = "No method of obtaining the key is provided", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
-   }
+WindUI:AddTheme({
+  Name = "Dark",
+  Accent = "#18181b",
+  Outline = "#FFFFFF",
+  Text = "#FFFFFF",
+  Placeholder = "#999999",
+  Background = "#0e0e10",
+  Button = "#52525b",
+  Icon = "#a1a1aa",
 })
 
-local worldList = {
-    ["Green Grasslands"] = "1",
-    ["Duodox Desert"] = "2",
-    ["Jujube Jungle"] = "3",
-    ["Gum Gum Gust"] = "4",
-    ["Rocky Rampage"] = "5",
-    ["Crystal Cave"] = "6",
-    ["Vigilante Village"] = "7",
-    ["Neo Neo Nexus"] = "8",
-    ["Withered Waters"] = "9",
-    ["Fort Frigundia"] = "10",
-    ["Camp Clumbus"] = "11",
-    ["Santa Salura"] = "12",
-    ["Fortuna Fungus"] = "13",
-    ["Sakura Shrine"] = "14",
-    ["Volcano Something"] = "15",
-    ["Childhood Playroom"] = "16",
-    ["Up In The Clouds"] = "17",
-    ["Pirate Hideout"] = "18",
-    ["Shivered Skylands"] = "Cloudy",
-    ["Collector's Hub"] = "Collectors",
-    ["The Hub"] = "Hub",
-    ["Lagoon"] = "Lagoon",
-    ["Portal Chamber"] = "Portals",
-    ["Shroom Island"] = "Shroom_Island",
-    ["Sour Swamp"] = "Swamp",
-    -- [""] = "",
-}
+WindUI:GetTransparency(true)
 
-local selectedWorldValue = nil
 
-local isTeleporting = false
+-- WINDOW
 
--- game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WorldTeleport"):FireServer()
+local Window = WindUI:CreateWindow({
+    Title = "Steal Time Simulator",
+    Icon = "swords",
+    Author = "Rainy",
+    Folder = "STS",
+    Size = UDim2.fromOffset(580, 460),
+    Transparent = true,
+    Theme = "Dark",
+    SideBarWidth = 200,
+    Background = "", -- rbxassetid only
+    BackgroundImageTransparency = 0.42,
+    HideSearchBar = true,
+    ScrollBarEnabled = false,
+    User = {
+        Enabled = true,
+        Anonymous = true,
+        Callback = function()
+            print("clicked")
+        end,
+    },
+})
 
--- NOTIF:
 
--- Players.LocalPlayer.PlayerGui.Main Interface.Frames.Notifications.Visible
+-- AUTO OPEN VAR
+
+local selectedCaseValue = nil
+
+local isAutoOpeningCase = false
 
 local caseList = {
     ["Beginner Case"] = "Case_1",
@@ -105,17 +84,35 @@ local caseList = {
     -- [""] = "",
 }
 
-local selectedCaseValue = nil
 
-local isAutoOpeningCase = false
+-- MAIN TAB
 
-local Tab = Window:CreateTab("Cases", "briefcase") -- Title, Image
+local Tab = Window:Tab({
+  Title = "Main",
+  Icon = "scroll",
+  Locked = false,
+})
 
-local Section = Tab:CreateSection("Auto Open Cases")
 
-local Dropdown = Tab:CreateDropdown({
-   Name = "Select Case",
-   Options = {"Beginner Case",
+-- MAIN ELEMENTS
+
+
+
+-- CASES TAB
+
+local Tab = Window:Tab({
+  Title = "Cases",
+  Icon = "briefcase",
+  Locked = false,
+})
+
+
+-- CASE ELEMENTS
+
+
+local Dropdown = Tab:Dropdown({
+    Title = "Select Case",
+    Values = { "Beginner Case",
             "Vengful Case",
             "Void Case",
             "RGB Toy Case",
@@ -142,92 +139,34 @@ local Dropdown = Tab:CreateDropdown({
             "Diamond_Case_3",
             "Green or Pink?",
             "Freeeee",
-            "The Lost Treasure",
-        },
-   CurrentOption = {"None"},
-   MultipleOptions = false,
-   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Option)
-            local selected = typeof(Option) == "table" and Option[1] or Option
-            selectedCaseValue = caseList[selected]
-            print(selectedCaseValue)
-            task.wait()
-        end
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Enable Auto Open",
-   CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-    isAutoOpeningCase = Value
-    if isAutoOpeningCase then
-        task.spawn(function()
-            while isAutoOpeningCase do
-                if selectedCaseValue then
-                    game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(selectedCaseValue)
-                end
-                task.wait()
-            end
-        end)
+            "The Lost Treasure" },
+    Value = "None",
+    Callback = function(option) 
+      local selected = typeof(option) == "table" and option[1] or option
+      selectedCaseValue = caseList[selected]
+      print("Category selected: " .. option) 
+      task.wait()
     end
-end
 })
 
-local Tab = Window:CreateTab("Teleports", "land-plot") -- Title, Image
-
-local Section = Tab:CreateSection("Teleport")
-
-local Dropdown = Tab:CreateDropdown({
-   Name = "Select World",
-   Options = {"Green Grasslands",
-            "Duodox Desert",
-            "Jujube Jungle",
-            "Gum Gum Gust",
-            "Rocky Rampage",
-            "Crystal Cave",
-            "Vigilante Village",
-            "Neo Neo Nexus",
-            "Withered Waters",
-            "Fort Frigundia",
-            "Camp Clumbus",
-            "Santa Salura",
-            "Fortuna Fungus",
-            "Sakura Shrine",
-            "Volcano Something",
-            "Childhood Playroom",
-            "Up In The Clouds",
-            "Pirate Hideout",
-            "Shivered Skylands",
-            "Collector's Hub",
-            "The Hub",
-            "Lagoon",
-            "Portal Chamber",
-            "Shroom Island",
-            "Sour Swamp",
-        },
-   CurrentOption = {"None"},
-   MultipleOptions = false,
-   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Option)
-            local selected = typeof(Option) == "table" and Option[1] or Option
-            selectedWorldValue = worldList[selected]
-            print(selectedWorldValue)
-            task.wait()
-        end
-})
-
-local Button = Tab:CreateButton({
-   Name = "Teleport to Area",
-   Callback = function(Value)
-            if isTeleporting then
-                task.spawn(function()
-                    if selectedWorldValue do
-                        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WorldTeleport"):FireServer(selectedWorldValue)
-                    end
-                    task.wait()
-                end)
+local Toggle = Tab:Toggle({
+    Title = "Enable Auto Open",
+    Desc = "Works from Anywhere",
+    Icon = nil,
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state) 
+      isAutoOpeningCase = state
+      if isAutoOpeningCase then
+        task.spawn(function()
+          while isAutoOpeningCase do
+            if selectedCaseValue then
+              game:GetServive:("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(selectedCaseValue)
+              task.wait()
             end
-        end 
-   end
+          end
+        end)
+      end
+      print("Toggle Activated" .. tostring(state))
+    end
 })
