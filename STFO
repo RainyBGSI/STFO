@@ -195,7 +195,7 @@ local Toggle = CookingTab:Toggle({
     Callback = function(state) 
       local part = workspace["World Building"].Prompts.CookFish
       
-      local cookprompt = instance.new("ProximityPrompt")
+      local cookprompt = Instance.new("ProximityPrompt")
       cookprompt.ActionText = "Cook Fish"
       cookprompt.ObjectText = "Cook Fish"
       cookprompt.HoldDuration = 0
