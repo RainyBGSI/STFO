@@ -101,7 +101,7 @@ local MainTab = Window:Tab({
 
 local Toggle = MainTab:Toggle({
     Title = "Disable Swords Notifications",
-    Desc = "Hides the Notifications when enabled",
+    Desc = "Hides Swords Notifications",
     Icon = "check", -- Optional icon
     Type = "Checkbox",
     Default = false, -- Notifications are visible by default
@@ -111,6 +111,8 @@ local Toggle = MainTab:Toggle({
         notificationsUI.Visible = not state
     end
 })
+
+
 
 -- CASES TAB
 
@@ -200,8 +202,8 @@ local CookingTab = Window:Tab({
 -- COOKING ELEMENTS
 
 local Toggle = CookingTab:Toggle({
-    Title = "Auto Cook Big Fish",
-    Desc = "Automatically cooks big fish",
+    Title = "Auto Cooks Big Fish",
+    Desc = "Must be near Campfire",
     Icon = "check", -- Optional: use any icon you like
     Type = "Checkbox",
     Default = false,
@@ -223,6 +225,28 @@ local Toggle = CookingTab:Toggle({
                 task.wait()
             end
         end)
+    end
+})
+
+local Button = CookingTab:Button({
+    Title = "Delete Overcooked Fishes (Effect)",
+    Desc = "Permanently removes the Overcooked Fish Effect",
+    Locked = false,
+    Callback = function()
+        local path = game:GetService("ReplicatedStorage")
+            :WaitForChild("Modules")
+            :WaitForChild("Controllers")
+            :WaitForChild("VisualEffectController")
+            :WaitForChild("VisualEffects")
+            :WaitForChild("Part_Providers")
+
+        local overcooked = path:FindFirstChild("Overcooked_Fish")
+        if overcooked then
+            overcooked:Destroy()
+            print("Overcooked Fishes deleted.")
+        else
+            warn("Overcooked Fish not found.")
+        end
     end
 })
 
