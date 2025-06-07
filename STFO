@@ -85,6 +85,7 @@ local caseList = {
 }
 
 
+
 -- MAIN TAB
 
 local MainTab = Window:Tab({
@@ -152,7 +153,7 @@ local Dropdown = CaseTab:Dropdown({
 
 local Toggle = CaseTab:Toggle({
     Title = "Enable Auto Open",
-    Desc = "Start Auto Opening",
+    Desc = "Works from Anywhere",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
@@ -171,6 +172,9 @@ local Toggle = CaseTab:Toggle({
     end
 })
 
+
+
+
 -- COOKING TAB
 
 local CookingTab = Window:Tab({
@@ -178,4 +182,51 @@ local CookingTab = Window:Tab({
   Icon = "chef-hat",
   Locked = false,
 })
+
+
+-- COOKING ELEMENTS
+
+local Toggle = Tab:Toggle({
+    Title = "Auto Cook Big Fish",
+    Desc = "Must be Near",
+    Icon = "fish",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state) 
+      local part = workspace["World Building"].Prompts.CookFish
+      
+      local cookprompt = instance.new("ProximityPrompt")
+      cookprompt.ActionText = "Cook Fish"
+      cookprompt.ObjectText = "Cook Fish"
+      cookprompt.HoldDuration = 0
+      cookprompt.RequiresLineOfSight = false
+      cookprompt.MaxActivationDistance = 10
+      
+      cookprompt.Parent = part
+      
+      local prompt = workspace["World Building"].Prompts.CookFish:FindFirstChildOfClass("ProximityPrompt")
+      
+      if prompt then
+        fireproximityprompt(prompt)
+        else
+          warn("Not Found")
+      end
+      
+      print("Toggle Activated" .. tostring(state))
+    end
+})
+
+-- PLAYER TAB
+
+
+
+local PlayerTab = Window:Tab({
+  Title = "Player",
+  Icon = "user-round",
+  Locked = false,
+})
+
+
+-- PLAYER ELEMENT
+
 
