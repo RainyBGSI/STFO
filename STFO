@@ -186,7 +186,7 @@ local CookingTab = Window:Tab({
 
 -- COOKING ELEMENTS
 
-local Toggle = Tab:Toggle({
+local Toggle = CookingTab:Toggle({
     Title = "Auto Cook Big Fish",
     Desc = "Must be Near",
     Icon = "fish",
