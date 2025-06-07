@@ -113,7 +113,7 @@ local Dropdown = Tab:CreateDropdown({
             local selected = typeof(Option) == "table" and Option[1] or Option
             selectedCaseValue = caseList[selected]
             print(selectedCaseValue)
-            task.wait(0.1)
+            task.wait()
         end
 })
 
@@ -131,7 +131,7 @@ local Toggle = Tab:CreateToggle({
                 if selectedCaseValue then
                     game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(selectedCaseValue)
                 end
-                task.wait(0.1)
+                task.wait()
             end
         end)
     end
