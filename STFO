@@ -87,7 +87,7 @@ local caseList = {
 
 -- MAIN TAB
 
-local Tab = Window:Tab({
+local MainTab = Window:Tab({
   Title = "Main",
   Icon = "scroll",
   Locked = false,
@@ -100,7 +100,7 @@ local Tab = Window:Tab({
 
 -- CASES TAB
 
-local Tab = Window:Tab({
+local CaseTab = Window:Tab({
   Title = "Cases",
   Icon = "briefcase",
   Locked = false,
@@ -110,10 +110,10 @@ local Tab = Window:Tab({
 -- CASE ELEMENTS
 
 
-local Dropdown = Tab:Dropdown({
+local Dropdown = CaseTab:Dropdown({
     Title = "Select Case",
     Values = {
-      "None"
+      "None",
       "Beginner Case",
       "Vengful Case",
       "Void Case",
@@ -150,9 +150,9 @@ local Dropdown = Tab:Dropdown({
     end
 })
 
-local Toggle = Tab:Toggle({
+local Toggle = CaseTab:Toggle({
     Title = "Enable Auto Open",
-    Desc = nil,
+    Desc = "Start Auto Opening",
     Icon = "bird",
     Type = "Checkbox",
     Default = false,
