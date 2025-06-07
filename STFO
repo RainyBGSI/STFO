@@ -1,13 +1,11 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
-
 local Window = Rayfield:CreateWindow({
-   Name = "STFO Fast Case Opener",
+   Name = "STS Script By Rainy",
    Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
    LoadingTitle = "Loading...",
    LoadingSubtitle = "STFO Script",
    Theme = "Default", -- Check https://docs.sirius.menu/rayfield/configuration/themes
 
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+   ToggleUIKeybind = "L", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
 
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
@@ -15,7 +13,7 @@ local Window = Rayfield:CreateWindow({
    ConfigurationSaving = {
       Enabled = false,
       FolderName = nil, -- Create a custom folder for your hub/game
-      FileName = "Big Hub"
+      FileName = "STFOConfig"
    },
 
    Discord = {
@@ -35,6 +33,45 @@ local Window = Rayfield:CreateWindow({
       Key = {"Hello"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
    }
 })
+
+local worldList = {
+    ["Green Grasslands"] = "1",
+    ["Duodox Desert"] = "2",
+    ["Jujube Jungle"] = "3",
+    ["Gum Gum Gust"] = "4",
+    ["Rocky Rampage"] = "5",
+    ["Crystal Cave"] = "6",
+    ["Vigilante Village"] = "7",
+    ["Neo Neo Nexus"] = "8",
+    ["Withered Waters"] = "9",
+    ["Fort Frigundia"] = "10",
+    ["Camp Clumbus"] = "11",
+    ["Santa Salura"] = "12",
+    ["Fortuna Fungus"] = "13",
+    ["Sakura Shrine"] = "14",
+    ["Volcano Something"] = "15",
+    ["Childhood Playroom"] = "16",
+    ["Up In The Clouds"] = "17",
+    ["Pirate Hideout"] = "18",
+    ["Shivered Skylands"] = "Cloudy",
+    ["Collector's Hub"] = "Collectors",
+    ["The Hub"] = "Hub",
+    ["Lagoon"] = "Lagoon",
+    ["Portal Chamber"] = "Portals",
+    ["Shroom Island"] = "Shroom_Island",
+    ["Sour Swamp"] = "Swamp",
+    -- [""] = "",
+}
+
+local selectedWorldValue = nil
+
+local isTeleporting = false
+
+-- game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WorldTeleport"):FireServer()
+
+-- NOTIF:
+
+-- Players.LocalPlayer.PlayerGui.Main Interface.Frames.Notifications.Visible
 
 local caseList = {
     ["Beginner Case"] = "Case_1",
@@ -65,6 +102,7 @@ local caseList = {
     ["Green or Pink?"] = "Diamond_Case_4",
     ["Freeeee"] = "Free_Case_1",
     ["The Lost Treasure"] = "Free_Case_2",
+    -- [""] = "",
 }
 
 local selectedCaseValue = nil
@@ -73,7 +111,7 @@ local isAutoOpeningCase = false
 
 local Tab = Window:CreateTab("Cases", "briefcase") -- Title, Image
 
-local Section = Tab:CreateSection("Fast Case Exploit")
+local Section = Tab:CreateSection("Auto Open Cases")
 
 local Dropdown = Tab:CreateDropdown({
    Name = "Select Case",
@@ -117,8 +155,6 @@ local Dropdown = Tab:CreateDropdown({
         end
 })
 
-local Divider = Tab:CreateDivider()
-
 local Toggle = Tab:CreateToggle({
    Name = "Enable Auto Open",
    CurrentValue = false,
@@ -136,4 +172,74 @@ local Toggle = Tab:CreateToggle({
         end)
     end
 end
+})
+
+local Toggle = Tab:CreateToggle({
+   Name = "Disable Notifications",
+   CurrentValue = false,
+   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Value)
+            getgenv().disableNotif = Value
+            if getgenv.disableNotif then
+                Players.LocalPlayer.PlayerGui.Main Interface.Frames.Notifications.Visible == Value
+            end
+   end
+})
+
+local Tab = Window:CreateTab("Teleports", "land-plot") -- Title, Image
+
+local Section = Tab:CreateSection("Teleport")
+
+local Dropdown = Tab:CreateDropdown({
+   Name = "Select World",
+   Options = {"Green Grasslands",
+            "Duodox Desert",
+            "Jujube Jungle",
+            "Gum Gum Gust",
+            "Rocky Rampage",
+            "Crystal Cave",
+            "Vigilante Village",
+            "Neo Neo Nexus",
+            "Withered Waters",
+            "Fort Frigundia",
+            "Camp Clumbus",
+            "Santa Salura",
+            "Fortuna Fungus",
+            "Sakura Shrine",
+            "Volcano Something",
+            "Childhood Playroom",
+            "Up In The Clouds",
+            "Pirate Hideout",
+            "Shivered Skylands",
+            "Collector's Hub",
+            "The Hub",
+            "Lagoon",
+            "Portal Chamber",
+            "Shroom Island",
+            "Sour Swamp",
+        },
+   CurrentOption = {"None"},
+   MultipleOptions = false,
+   Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+   Callback = function(Option)
+            local selected = typeof(Option) == "table" and Option[1] or Option
+            selectedWorldValue = worldList[selected]
+            print(selectedWorldValue)
+            task.wait()
+        end
+})
+
+local Button = Tab:CreateButton({
+   Name = "Teleport to Area",
+   Callback = function(Value)
+            if isTeleporting then
+                task.spawn(function()
+                    if selectedWorldValue do
+                        game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("WorldTeleport"):FireServer(selectedWorldValue)
+                    end
+                    task.wait()
+                end)
+            end
+        end 
+   end
 })
