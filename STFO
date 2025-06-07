@@ -28,7 +28,7 @@ local Window = WindUI:CreateWindow({
     Icon = "swords",
     Author = "Script by Rainy",
     Folder = "STS",
-    Size = UDim2.fromOffset(400, 340),
+    Size = UDim2.fromOffset(420, 340),
     Transparent = true,
     Theme = "Dark",
     SideBarWidth = 150,
@@ -170,3 +170,12 @@ local Toggle = CaseTab:Toggle({
         print("Toggle Activated" .. tostring(state))
     end
 })
+
+-- COOKING TAB
+
+local CookingTab = Window:Tab({
+  Title = "Cooking",
+  Icon = "chef-hat",
+  Locked = false,
+})
+
