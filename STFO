@@ -199,7 +199,32 @@ local CookingTab = Window:Tab({
 
 -- COOKING ELEMENTS
 
+local Toggle = CookingTab:Toggle({
+    Title = "Auto Cook Big Fish",
+    Desc = "Automatically cooks big fish",
+    Icon = "check", -- Optional: use any icon you like
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        getgenv().autoCookFish = state
 
+        local function getPrompt()
+            return workspace:WaitForChild("World Building"):WaitForChild("Prompts"):FindFirstChild("CookFish"):FindFirstChildOfClass("ProximityPrompt")
+        end
+
+        task.spawn(function()
+            while getgenv().autoCookFish do
+                local prompt = getPrompt()
+                if prompt then
+                    fireproximityprompt(prompt)
+                else
+                    warn("CookFish ProximityPrompt not found.")
+                end
+                task.wait()
+            end
+        end)
+    end
+})
 
 -- PLAYER TAB
 
