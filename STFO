@@ -109,13 +109,6 @@ local selectedCaseValue = nil
 
 local isAutoOpeningCase = false
 
-
-local Players = game:GetService("Players")
-
-local player = game:GetService("Players").LocalPlayer
-
-local notificationsValue = player:WaitForChild("PlayerGui"):WaitForChild("Main Interface"):WaitForChild("Frames"):WaitForChild("Notifications")
-
 local Tab = Window:CreateTab("Cases", "briefcase") -- Title, Image
 
 local Section = Tab:CreateSection("Auto Open Cases")
@@ -179,21 +172,6 @@ local Toggle = Tab:CreateToggle({
         end)
     end
 end
-})
-
-local Toggle = Tab:CreateToggle({
-   Name = "Disable Sword Notifications",
-   CurrentValue = false,
-   Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Value)
-            getgenv().disableNotif = Value
-            if getgenv().disableNotif == true then
-                notificationsValue.Visible = false
-            elseif getgenv().disableNotif == false then
-                notificationsValue.Visible = true
-            end
-            end
-   end
 })
 
 local Tab = Window:CreateTab("Teleports", "land-plot") -- Title, Image
