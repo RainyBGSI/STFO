@@ -155,8 +155,8 @@ local Toggle = Tab:Toggle({
     Icon = nil,
     Type = "Checkbox",
     Default = false,
-    Callback = function(state) 
-      isAutoOpeningCase = state
+    Callback = function(Value) 
+      isAutoOpeningCase = Value
       if isAutoOpeningCase then
         task.spawn(function()
           while isAutoOpeningCase do
@@ -167,6 +167,7 @@ local Toggle = Tab:Toggle({
           end
         end)
       end
-      print("Toggle Activated" .. tostring(state))
+      print("Toggle Activated" .. tostring(Value))
     end
 })
+
