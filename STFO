@@ -1,3 +1,5 @@
+-- CALLING THE LIBRARY
+
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
 
@@ -97,7 +99,18 @@ local MainTab = Window:Tab({
 
 -- MAIN ELEMENTS
 
-
+local Toggle = MainTab:Toggle({
+    Title = "Disable Swords Notifications",
+    Desc = "Hides the Notifications when enabled",
+    Icon = "check", -- Optional icon
+    Type = "Checkbox",
+    Default = false, -- Notifications are visible by default
+    Callback = function(state)
+        local player = game:GetService("Players").LocalPlayer
+        local notificationsUI = player:WaitForChild("PlayerGui"):WaitForChild("Main Interface"):WaitForChild("Frames"):WaitForChild("Notifications")
+        notificationsUI.Visible = not state
+    end
+})
 
 -- CASES TAB
 
@@ -186,31 +199,7 @@ local CookingTab = Window:Tab({
 
 -- COOKING ELEMENTS
 
-local Toggle = CookingTab:Toggle({
-    Title = "Auto Cook Big Fish",
-    Desc = "Must be Near",
-    Icon = "check",
-    Type = "Checkbox",
-    Default = false,
-    Callback = function(state) 
-      getgenv().AutoFish = state
-      if state then
-        task.spawn(function()
-          while getgenv().AutoFish do
-            local prompt = workspace["World Building"].Prompts.CookFish:FindFirstChildOfClass("ProximityPrompt")
-            
-            if prompt then
-              fireproximitypprompt(prompt)
-              else
-                warn("ProximityPrompt Not Found")
-            end
-          end
-        end)
-      end
-      task.wait()
-      print("Toggle Activated" .. tostring(state))
-    end
-})
+
 
 -- PLAYER TAB
 
