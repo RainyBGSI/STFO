@@ -109,9 +109,10 @@ local Dropdown = Tab:CreateDropdown({
    CurrentOption = {"None"},
    MultipleOptions = false,
    Flag = "Dropdown1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
-   Callback = function(Options)
+   Callback = function(Option)
             selectedCaseValue = caseList[Option]
-            task.wait()
+            print(selectedCaseValue)
+            task.wait(0.1)
         end
 })
 
@@ -129,7 +130,7 @@ local Toggle = Tab:CreateToggle({
                 if selectedCaseValue then
                     game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(selectedCaseValue)
                 end
-                task.wait()
+                task.wait(0.1)
             end
         end)
     end
