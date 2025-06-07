@@ -112,62 +112,61 @@ local Tab = Window:Tab({
 
 local Dropdown = Tab:Dropdown({
     Title = "Select Case",
-    Values = { "Beginner Case",
-            "Vengful Case",
-            "Void Case",
-            "RGB Toy Case",
-            "The Rock Family",
-            "Crystallic Treasures",
-            "A Sheriff's Equipment!",
-            "Neo Neo Tempus",
-            "Burried Treasure",
-            "Negative Degrees",
-            "My Camping Equipment",
-            "Sunday Delight",
-            "Shroooooooms",
-            "Sakura Case",
-            "Volcanic Case",
-            "Toy Box",
-            "Stealing From The Gods",
-            "Case_18",
-            "Neon Red Dilemma",
-            "The Lost Souls",
-            "Burning Souls",
-            "X Marks The Spot",
-            "Shiny Rocks",
-            "Neo Neo Crazy",
-            "Diamond_Case_3",
-            "Green or Pink?",
-            "Freeeee",
-            "The Lost Treasure" },
+    Values = {
+      "None"
+      "Beginner Case",
+      "Vengful Case",
+      "Void Case",
+      "RGB Toy Case",
+      "The Rock Family",
+      "Crystallic Treasures",
+      "A Sheriff's Equipment!",
+      "Neo Neo Tempus",
+      "Burried Treasure",
+      "Negative Degrees",
+      "My Camping Equipment",
+      "Sunday Delight",
+      "Shroooooooms",
+      "Sakura Case",
+      "Volcanic Case",
+      "Toy Box",
+      "Stealing From The Gods",
+      "Case_18",
+      "Neon Red Dilemma",
+      "The Lost Souls",
+      "Burning Souls",
+      "X Marks The Spot",
+      "Shiny Rocks",
+      "Neo Neo Crazy",
+      "Diamond_Case_3",
+      "Green or Pink?",
+      "Freeeee",
+      "The Lost Treasure",
+    },
     Value = "None",
     Callback = function(option) 
-      local selected = typeof(option) == "table" and option[1] or option
-      selectedCaseValue = caseList[selected]
-      print("Category selected: " .. option) 
-      task.wait()
+      selectedCaseValue = caseList[option]
+        print("Category selected: " .. option) 
     end
 })
 
 local Toggle = Tab:Toggle({
     Title = "Enable Auto Open",
-    Desc = "Works from Anywhere",
-    Icon = nil,
+    Desc = nil,
+    Icon = "bird",
     Type = "Checkbox",
     Default = false,
-    Callback = function(Value) 
-      isAutoOpeningCase = Value
-      if isAutoOpeningCase then
-        task.spawn(function()
-          while isAutoOpeningCase do
-            if selectedCaseValue then
-              game:GetServive:("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(selectedCaseValue)
-              task.wait()
-            end
-          end
-        end)
+    Callback = function(state) 
+      isAutoOpeningCase = state
+      while isAutoOpeningCase do
+        if selectedCaseValue then
+          local args = {
+            selectedCaseValue
+          }
+          game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(unpack(args))
+        end
+        task.wait()
       end
-      print("Toggle Activated" .. tostring(Value))
+        print("Toggle Activated" .. tostring(state))
     end
 })
-
