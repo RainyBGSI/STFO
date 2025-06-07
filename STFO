@@ -26,7 +26,7 @@ WindUI:GetTransparency(true)
 local Window = WindUI:CreateWindow({
     Title = "Steal Time Simulator",
     Icon = "swords",
-    Author = "Rainy",
+    Author = "Script by Rainy",
     Folder = "STS",
     Size = UDim2.fromOffset(400, 340),
     Transparent = true,
