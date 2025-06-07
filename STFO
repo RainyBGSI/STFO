@@ -189,29 +189,19 @@ local CookingTab = Window:Tab({
 local Toggle = CookingTab:Toggle({
     Title = "Auto Cook Big Fish",
     Desc = "Must be Near",
-    Icon = "fish",
+    Icon = "check",
     Type = "Checkbox",
     Default = false,
     Callback = function(state) 
-      local part = workspace["World Building"].Prompts.CookFish
-      
-      local cookprompt = Instance.new("ProximityPrompt")
-      cookprompt.ActionText = "Cook Fish"
-      cookprompt.ObjectText = "Cook Fish"
-      cookprompt.HoldDuration = 0
-      cookprompt.RequiresLineOfSight = false
-      cookprompt.MaxActivationDistance = 10
-      
-      cookprompt.Parent = part
-      
-      local prompt = workspace["World Building"].Prompts.CookFish:FindFirstChildOfClass("ProximityPrompt")
-      
-      if prompt then
-        fireproximityprompt(prompt)
-        else
-          warn("Not Found")
+      getgenv().AutoFish = state
+      if state then
+        task.spawn(function()
+          while getgenv().AutoFish do
+            fireproximityprompt(CookFish)
+          end
+        end)
       end
-      
+      task.wait()
       print("Toggle Activated" .. tostring(state))
     end
 })
