@@ -112,9 +112,9 @@ local isAutoOpeningCase = false
 
 local Players = game:GetService("Players")
 
-local player = Players.LocalPlayer
+local player = game:GetService("Players").LocalPlayer
 
-local notificationsValue = player.WaitForChild("PlayerGui"):WaitForChild("Main Interface").Frames.Notifications
+local notificationsValue = player:WaitForChild("PlayerGui"):WaitForChild("Main Interface"):WaitForChild("Frames"):WaitForChild("Notifications")
 
 local Tab = Window:CreateTab("Cases", "briefcase") -- Title, Image
 
