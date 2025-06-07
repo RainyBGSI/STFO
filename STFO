@@ -197,7 +197,7 @@ local Toggle = CookingTab:Toggle({
       if state then
         task.spawn(function()
           while getgenv().AutoFish do
-            fireproximityprompt(CookFish)
+            workspace["World Building"].Prompts.fireproximityprompt(CookFish)
           end
         end)
       end
