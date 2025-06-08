@@ -138,7 +138,7 @@ local function getPartsInViewport(maxDistance)
     return partsInViewport
 end
 
-local Input = Tab:Input({
+local Input = MainTab:Input({
     Title = "Reach Range",
     Desc = "Set how far your reach goes (e.g. 9)",
     Value = tostring(getgenv().Range),
