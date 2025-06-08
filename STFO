@@ -162,7 +162,7 @@ local Toggle = MainTab:Toggle({
 
 
 local Toggle = MainTab:Toggle({
-    Title = "Disable Swords Notifications",
+    Title = "Disable Notifications",
     Desc = "Hides Swords Notifications",
     Icon = "check", -- Optional icon
     Type = "Checkbox",
