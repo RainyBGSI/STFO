@@ -109,6 +109,53 @@ local MainTab = Window:Tab({
 
 -- MAIN ELEMENTS
 
+-- SERVICES
+
+
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- MAIN SETTING
+
+
+getgenv().ReachEnabled = false
+getgenv().Range = 9 -- Default value, will be changed by input
+
+local function getPartsInViewport(maxDistance)
+    local partsInViewport = {}
+    for _, part in ipairs(workspace:GetDescendants()) do
+        if part:IsA("BasePart") then
+            local distance = LocalPlayer:DistanceFromCharacter(part.Position)
+            if distance <= maxDistance then
+                local _, isVisible = Camera:WorldToViewportPoint(part.Position)
+                if isVisible then
+                    table.insert(partsInViewport, part)
+                end
+            end
+        end
+    end
+    return partsInViewport
+end
+
+local Input = Tab:Input({
+    Title = "Reach Range",
+    Desc = "Set how far your reach goes (e.g. 9)",
+    Value = tostring(getgenv().Range),
+    InputIcon = "check",
+    Type = "Input",
+    Placeholder = "Enter a number...",
+    Callback = function(input)
+        local number = tonumber(input)
+        if number then
+            getgenv().Range = number
+            print("Reach range set to:", getgenv().Range)
+        else
+            warn("Invalid input: not a number.")
+        end
+    end
+})
+
 local Toggle = MainTab:Toggle({
     Title = "Reach",
     Desc = "Reach / Hitbox Expander",
@@ -116,46 +163,20 @@ local Toggle = MainTab:Toggle({
     Type = "Checkbox",
     Default = false,
     Callback = function(state)
-        getgenv().Range = 9
         getgenv().ReachEnabled = state
-
-        local players = game:GetService("Players")
-        local player = players.LocalPlayer
-        local camera = workspace.CurrentCamera
-
-        local function getPartsInViewport(maxDistance)
-            local partsInViewport = {}
-            for _, part in ipairs(workspace:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    local distance = player:DistanceFromCharacter(part.Position)
-                    if distance <= maxDistance then
-                        local _, isVisible = camera:WorldToViewportPoint(part.Position)
-                        if isVisible then
-                            table.insert(partsInViewport, part)
-                        end
-                    end
-                end
-            end
-            return partsInViewport
-        end
 
         if state then
             task.spawn(function()
                 while getgenv().ReachEnabled do
                     local parts = getPartsInViewport(getgenv().Range)
-
+                    -- You can do stuff to the parts here, like hit detection
+                    -- For demonstration:
                     for _, part in ipairs(parts) do
-                        local model = part:FindFirstAncestorOfClass("Model")
-                        if model and model:FindFirstChild("Humanoid") and model ~= player.Character then
-                            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-                            if tool and tool:FindFirstChild("Handle") then
-                                firetouchinterest(tool.Handle, part, 0)
-                                firetouchinterest(tool.Handle, part, 1)
-                            end
-                        end
+                        part.Color = Color3.fromRGB(255, 0, 0)
+                        part.Material = Enum.Material.Neon
+                        part.Transparency = 0.5
                     end
-
-                    task.wait()
+                    task.wait(0.2)
                 end
             end)
         end
