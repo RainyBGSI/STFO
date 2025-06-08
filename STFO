@@ -137,6 +137,28 @@ local Toggle = MainTab:Toggle({
       	end
       	return partsInViewport
       end
+      
+      if state then
+        task.spawn(function()
+          while getgenv().ReachEnabled do
+            local parts = getPartsInViewport(getgenv().Range)
+            
+            for _, in ipaires(parts) do
+              
+              local model = part:FindFirstChildOfClass("Model")
+                if model and model:FindFirstChild("Humanoid") and model ~= player.Character then
+                  local tool and tool:FindFirstChild("Handle") then
+                    firetouchinterest(tool.Handle, part, 0)
+                    firetouchinterest(tool.Handle, part, 1)
+                  end
+                end
+            end
+            task.wait()
+            end
+          end
+        end)
+    end
+})
 
 
 
