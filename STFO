@@ -97,9 +97,9 @@ local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
 local function GetCharParent()
-    local CharParent
+    local charParent
     repeat wait() until LocalPlayer.Character
-    for _, in pairs(workspace.GetDescendants()) do
+    for _, char in pairs(workspace:GetDescendants()) do
         if string.find(char.Name, LocalPlayer.Name) and char:FindFirstChild("Humanoid") then
             charParent = char.Parent
             break
@@ -144,14 +144,16 @@ local function AssignHitboxes(player)
                     char.HumanoidRootPart.Transparency = 0.5
             end
             else
+                if char and char:FindFirstChild("HumanoidRootPart") then
                 hitbox_connection:Disconnect()
                 char.HumanoidRootPart.Size = Vector3.new(2,2,1)
                 char.HumanoidRootPart.Transparency = 1
+                end
         end
     end)
 end
 
-Players.PlayerAdded:Connect(function
+Players.PlayerAdded:Connect(function(player)
     if getgenv().HBE then
         AssignHitboxes(player)
     end
@@ -169,7 +171,7 @@ local MainTab = Window:Tab({
 
 -- MAIN ELEMENTS
 
-local Toggle = CaseTab:Toggle({
+local Toggle = MainTab:Toggle({
     Title = "Reach (Test)",
     Desc = "Reach / Hitbox Expander",
     Icon = "check",
