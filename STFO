@@ -106,12 +106,12 @@ local MainTab = Window:Tab({
 
 -- MAIN ELEMENTS
 
-print("Reach Amount == 13")
+print("Range Amount == 14")
 
 local players = game:GetService("Players")
 local player = players.LocalPlayer
 
-getgenv().Range = 13
+getgenv().Range = 14
 getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
