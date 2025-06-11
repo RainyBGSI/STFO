@@ -109,12 +109,12 @@ local MainTab = Window:Tab({
 local players = game:GetService("Players")
 local player = players.LocalPlayer
 
-getgenv().Range = 13
+getgenv().Range = 15
 getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
     Title = "Reach",
-    Desc = "Reach / Hitbox Expander",
+    Desc = "Reach",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
