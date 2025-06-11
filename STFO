@@ -114,7 +114,7 @@ getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
     Title = "Reach",
-    Desc = "Reach / Hitbox Expander",
+    Desc = "Reach / Hitbox expander",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
