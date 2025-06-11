@@ -106,59 +106,54 @@ local MainTab = Window:Tab({
 
 -- MAIN ELEMENTS
 
-local Toggle = MainTab:Toggle({
-    Title = "Reach",
-    Desc = "Reach / Hitbox Expander",
-    Icon = "check",
-    Type = "Checkbox",
-    Default = false,
-    Callback = function(state)
-        getgenv().Range = 11
-        getgenv().ReachEnabled = state
+getgenv().Range = 9
+getgenv().ReachEnabled = true
 
-        local players = game:GetService("Players")
-        local player = players.LocalPlayer
-        local camera = workspace.CurrentCamera
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local player = Players.LocalPlayer
 
-        local function getPartsInViewport(maxDistance)
-            local partsInViewport = {}
-            for _, part in ipairs(workspace:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    local distance = player:DistanceFromCharacter(part.Position)
-                    if distance <= maxDistance then
-                        local _, isVisible = camera:WorldToViewportPoint(part.Position)
-                        if isVisible then
-                            table.insert(partsInViewport, part)
+local function getEnemyPartsInRange(range)
+    local targets = {}
+    for _, otherPlayer in ipairs(Players:GetPlayers()) do
+        if otherPlayer ~= player and otherPlayer.Character then
+            local char = otherPlayer.Character
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            local root = char:FindFirstChild("HumanoidRootPart")
+
+            if humanoid and humanoid.Health > 0 and root then
+                local distance = (root.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                if distance <= range then
+                    -- Collect all touchable parts in the enemy character
+                    for _, part in ipairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            table.insert(targets, part)
                         end
                     end
                 end
             end
-            return partsInViewport
-        end
-
-        -- Start loop only if toggle is enabled
-        if state then
-            task.spawn(function()
-                while getgenv().ReachEnabled do
-                    local parts = getPartsInViewport(getgenv().Range)
-
-                    for _, part in ipairs(parts) do
-                        local model = part:FindFirstAncestorOfClass("Model")
-                        if model and model:FindFirstChild("Humanoid") and model ~= player.Character then
-                            local tool = player.Character and player.Character:FindFirstChildOfClass("Tool")
-                            if tool and tool:FindFirstChild("Handle") then
-                                firetouchinterest(tool.Handle, part, 0)
-                                firetouchinterest(tool.Handle, part, 1)
-                            end
-                        end
-                    end
-
-                    task.wait(0.5)
-                end
-            end)
         end
     end
-})
+    return targets
+end
+
+task.spawn(function()
+    while true do
+        task.wait(0.2) -- slight delay to reduce CPU usage
+        if not getgenv().ReachEnabled then continue end
+
+        local char = player.Character
+        local tool = char and char:FindFirstChildOfClass("Tool")
+        local handle = tool and tool:FindFirstChild("Handle")
+        if not handle then continue end
+
+        local parts = getEnemyPartsInRange(getgenv().Range)
+        for _, part in ipairs(parts) do
+            firetouchinterest(handle, part, 0)
+            firetouchinterest(handle, part, 1)
+        end
+    end
+end)
 
 
 local Toggle = MainTab:Toggle({
