@@ -106,54 +106,74 @@ local MainTab = Window:Tab({
 
 -- MAIN ELEMENTS
 
-getgenv().Range = 9
-getgenv().ReachEnabled = true
+local players = game:GetService("Players")
+local player = players.LocalPlayer
 
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local player = Players.LocalPlayer
+getgenv().Range = 11
+getgenv().ReachEnabled = false
 
-local function getEnemyPartsInRange(range)
-    local targets = {}
-    for _, otherPlayer in ipairs(Players:GetPlayers()) do
-        if otherPlayer ~= player and otherPlayer.Character then
-            local char = otherPlayer.Character
-            local humanoid = char:FindFirstChildOfClass("Humanoid")
-            local root = char:FindFirstChild("HumanoidRootPart")
+local Toggle = Tab:Toggle({
+    Title = "Toggle",
+    Desc = "Toggle Description",
+    Icon = "check",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        print("Toggle Activated: " .. tostring(state))
+        getgenv().ReachEnabled = state
 
-            if humanoid and humanoid.Health > 0 and root then
-                local distance = (root.Position - player.Character.HumanoidRootPart.Position).Magnitude
-                if distance <= range then
-                    -- Collect all touchable parts in the enemy character
-                    for _, part in ipairs(char:GetDescendants()) do
-                        if part:IsA("BasePart") then
-                            table.insert(targets, part)
+        local function getTargetsInRange(maxDistance)
+            local partsInRange = {}
+            for _, otherPlayer in ipairs(players:GetPlayers()) do
+                if otherPlayer ~= player and otherPlayer.Character then
+                    local char = otherPlayer.Character
+                    local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+                    local root = char:FindFirstChild("HumanoidRootPart")
+
+                    if humanoid and humanoid.Health > 0 and root then
+                        local distance = (root.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                        if distance <= maxDistance then
+                            for _, part in ipairs(char:GetDescendants()) do
+                                if part:IsA("BasePart") then
+                                    table.insert(partsInRange, part)
+                                end
+                            end
                         end
                     end
                 end
             end
+            return partsInRange
+        end
+
+        -- Start loop only when the toggle is enabled
+        if state then
+            task.spawn(function()
+                while getgenv().ReachEnabled do
+                    local character = player.Character
+                    local tool = character and character:FindFirstChildOfClass("Tool")
+                    local handle = tool and tool:FindFirstChild("Handle")
+
+                    if tool and handle then
+                        local parts = getTargetsInRange(getgenv().Range)
+                        local didHit = false
+
+                        for _, part in ipairs(parts) do
+                            firetouchinterest(handle, part, 0)
+                            firetouchinterest(handle, part, 1)
+                            didHit = true
+                        end
+
+                        if didHit then
+                            tool:Activate()
+                        end
+                    end
+
+                    task.wait(0.2)
+                end
+            end)
         end
     end
-    return targets
-end
-
-task.spawn(function()
-    while true do
-        task.wait(0.2) -- slight delay to reduce CPU usage
-        if not getgenv().ReachEnabled then continue end
-
-        local char = player.Character
-        local tool = char and char:FindFirstChildOfClass("Tool")
-        local handle = tool and tool:FindFirstChild("Handle")
-        if not handle then continue end
-
-        local parts = getEnemyPartsInRange(getgenv().Range)
-        for _, part in ipairs(parts) do
-            firetouchinterest(handle, part, 0)
-            firetouchinterest(handle, part, 1)
-        end
-    end
-end)
+})
 
 
 local Toggle = MainTab:Toggle({
