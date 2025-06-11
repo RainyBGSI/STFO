@@ -113,7 +113,7 @@ local Toggle = MainTab:Toggle({
     Type = "Checkbox",
     Default = false,
     Callback = function(state)
-        getgenv().Range = 10
+        getgenv().Range = 11
         getgenv().ReachEnabled = state
 
         local players = game:GetService("Players")
