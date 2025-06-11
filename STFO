@@ -112,7 +112,7 @@ local player = players.LocalPlayer
 getgenv().Range = 11
 getgenv().ReachEnabled = false
 
-local Toggle = Tab:Toggle({
+local Toggle = MainTab:Toggle({
     Title = "Toggle",
     Desc = "Toggle Description",
     Icon = "check",
