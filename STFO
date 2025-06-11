@@ -113,8 +113,8 @@ getgenv().Range = 11
 getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
-    Title = "Toggle",
-    Desc = "Toggle Description",
+    Title = "Reach",
+    Desc = "",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
