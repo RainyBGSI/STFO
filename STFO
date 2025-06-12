@@ -1,21 +1,46 @@
+-- CALLING THE LIBRARY
+
 local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
 
+
+-- LIBRARY
+
+WindUI:SetNotificationLower(true)
+
+WindUI:SetTheme("Dark")
+
+WindUI:AddTheme({
+  Name = "Dark",
+  Accent = "#18181b",
+  Outline = "#FFFFFF",
+  Text = "#FFFFFF",
+  Placeholder = "#999999",
+  Background = "#0e0e10",
+  Button = "#52525b",
+  Icon = "#a1a1aa",
+})
+
+WindUI:GetTransparency(true)
+
+
+-- WINDOW
+
 local Window = WindUI:CreateWindow({
-    Title = "Imperial Hatchers",
-    Icon = "cloud",
-    Author = "Script by @rainy.luvsyou",
-    Folder = "IMPH",
-    Size = UDim2.fromOffset(580, 460),
+    Title = "Steal Time Simulator",
+    Icon = "swords",
+    Author = "Script by Rainy",
+    Folder = "STS",
+    Size = UDim2.fromOffset(420, 340),
     Transparent = true,
     Theme = "Dark",
-    SideBarWidth = 200,
+    SideBarWidth = 150,
     Background = "", -- rbxassetid only
     BackgroundImageTransparency = 0.42,
     HideSearchBar = true,
     ScrollBarEnabled = false,
     User = {
         Enabled = true,
-        Anonymous = true,
+        Anonymous = false,
         Callback = function()
             print("clicked")
         end,
@@ -23,156 +48,295 @@ local Window = WindUI:CreateWindow({
 })
 
 
-local eggList = {
-  ["100K Egg"] = "100K Egg",
-  ["Common Egg"] = "Common Egg",
-  ["Rare Egg"] = "Rare Egg",
-  ["Epic Egg"] = "Epic Egg",
-  ["Ice Egg"] = "Ice Egg",
-  ["Frozen Egg"] = "Frozen Egg",
-  ["Inferno Egg"] = "Inferno Egg",
-  ["Volcanic Egg"] = "Volcanic Egg",
-  ["Magical Egg"] = "Magical Egg",
-  ["Imagination Egg"] = "Imagination Egg",
+-- AUTO OPEN VAR
+
+local selectedCaseValue = nil
+
+local isAutoOpeningCase = false
+
+local caseList = {
+    ["Beginner Case"] = "Case_1",
+    ["Vengful Case"] = "Case_2",
+    ["Void Case"] = "Case_3",
+    ["RGB Toy Case"] = "Case_4",
+    ["The Rock Family"] = "Case_5",
+    ["Crystallic Treasures"] = "Case_6",
+    ["A Sheriff's Equipment!"] = "Case_7",
+    ["Neo Neo Tempus"] = "Case_8",
+    ["Burried Treasure"] = "Case_9",
+    ["Negative Degrees"] = "Case_10",
+    ["My Camping Equipment"] = "Case_11",
+    ["Sunday Delight"] = "Case_12",
+    ["Shroooooooms"] = "Case_13",
+    ["Sakura Case"] = "Case_14",
+    ["Volcanic Case"] = "Case_15",
+    ["Toy Box"] = "Case_16",
+    ["Stealing From The Gods"] = "Case_17",
+    ["Case_18"] = "Case_18",
+    ["Neon Red Dilemma"] = "Kill_Case_1",
+    ["The Lost Souls"] = "Kill_Case_2",
+    ["Burning Souls"] = "Kill_Case_3",
+    ["X Marks The Spot"] = "Kill_Case_4",
+    ["Shiny Rocks"] = "Diamond_Case_1",
+    ["Neo Neo Crazy"] = "Diamond_Case_2",
+    ["Diamond_Case_3"] = "Diamond_Case_3",
+    ["Green or Pink?"] = "Diamond_Case_4",
+    ["Freeeee"] = "Free_Case_1",
+    ["The Lost Treasure"] = "Free_Case_2",
+    -- [""] = "",
 }
 
+-- MAIN VAR
+
+
+local Players = game:GetService("Players")
+
+local LocalPlayer = Players.LocalPlayer
+
+warn("Range Amount = 11")
+
+-- MAIN TAB
 
 local MainTab = Window:Tab({
-    Title = "Main",
-    Icon = "folder-closed",
-    Locked = false,
+  Title = "Main",
+  Icon = "scroll",
+  Locked = false,
 })
+
+
+-- MAIN ELEMENTS
+
+
+local players = game:GetService("Players")
+local player = players.LocalPlayer
+
+getgenv().Range = 11
+getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
-    Title = "Auto Click",
-    Desc = "Automatically Clicks",
+    Title = "Reach",
+    Desc = "Reach / Hitbox Expander",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
     Callback = function(state)
-      getgenv().ClickEvent = state
-      if getgenv().ClickEvent then
-        task.spawn(function()
-          while getgenv().ClickEvent do
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("ClickEvent"):FireServer(true)
-            task.wait()
-          end
-        end)
-      end
+        print("Toggle Activated: " .. tostring(state))
+        getgenv().ReachEnabled = state
+
+        local function getTargetsInRange(maxDistance)
+            local partsInRange = {}
+            for _, otherPlayer in ipairs(players:GetPlayers()) do
+                if otherPlayer ~= player and otherPlayer.Character then
+                    local char = otherPlayer.Character
+                    local humanoid = char:FindFirstChildWhichIsA("Humanoid")
+                    local root = char:FindFirstChild("HumanoidRootPart")
+
+                    if humanoid and humanoid.Health > 0 and root then
+                        local distance = (root.Position - player.Character.HumanoidRootPart.Position).Magnitude
+                        if distance <= maxDistance then
+                            for _, part in ipairs(char:GetDescendants()) do
+                                if part:IsA("BasePart") then
+                                    table.insert(partsInRange, part)
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+            return partsInRange
+        end
+
+        -- Start loop only when the toggle is enabled
+        if state then
+            task.spawn(function()
+                while getgenv().ReachEnabled do
+                    local character = player.Character
+                    local tool = character and character:FindFirstChildOfClass("Tool")
+                    local handle = tool and tool:FindFirstChild("Handle")
+
+                    if tool and handle then
+                        local parts = getTargetsInRange(getgenv().Range)
+                        local didHit = false
+
+                        for _, part in ipairs(parts) do
+                            firetouchinterest(handle, part, 0)
+                            firetouchinterest(handle, part, 1)
+                            didHit = true
+                        end
+
+                        if didHit then
+                            tool:Activate()
+                        end
+                    end
+
+                    task.wait(0.2)
+                end
+            end)
+        end
     end
 })
 
-local MerchantTab = Window:Tab({
-    Title = "Merchant",
-    Icon = "store",
-    Locked = false,
-})
 
-local Toggle = MerchantTab:Toggle({
-    Title = "Auto Buy Lucky Potion",
-    Desc = "Automatically Purchases when Available",
-    Icon = "check",
+local Toggle = MainTab:Toggle({
+    Title = "Disable Notifications",
+    Desc = "Hides Swords Notifications",
+    Icon = "check", -- Optional icon
     Type = "Checkbox",
-    Default = false,
+    Default = false, -- Notifications are visible by default
     Callback = function(state)
-      getgenv().BuyLucky = state
-      if getgenv().BuyLucky then
-        task.spawn(function()
-          while getgenv().BuyLucky do
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("MerchantEvents"):WaitForChild("BuyItem"):FireServer("LuckPotion")
-            task.wait(5)
-          end
-        end)
-      end
+        local player = game:GetService("Players").LocalPlayer
+        local notificationsUI = player:WaitForChild("PlayerGui"):WaitForChild("Main Interface"):WaitForChild("Frames"):WaitForChild("Notifications")
+        notificationsUI.Visible = not state
     end
 })
 
-local Toggle = MerchantTab:Toggle({
-    Title = "Auto Buy Ultra Lucky Potion",
-    Desc = "Automatically Purchases when Available",
-    Icon = "check",
-    Type = "Checkbox",
-    Default = false,
-    Callback = function(state)
-      getgenv().BuyUltraLucky = state
-      if getgenv().BuyUltraLucky then
-        task.spawn(function()
-          while getgenv().BuyUltraLucky do
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("MerchantEvents"):WaitForChild("BuyItem"):FireServer("UltraLuckPotion")
-            task.wait(5)
-          end
-        end)
-      end
-    end
+
+
+-- CASES TAB
+
+local CaseTab = Window:Tab({
+  Title = "Cases",
+  Icon = "briefcase",
+  Locked = false,
 })
 
-local Toggle = MerchantTab:Toggle({
-    Title = "Auto Buy Rich Friend",
-    Desc = "Automatically Purchases when Available",
-    Icon = "check",
-    Type = "Checkbox",
-    Default = false,
-    Callback = function(state)
-      getgenv().BuyPet = state
-      if getgenv().BuyPet then
-        task.spawn(function()
-          while getgenv().BuyPet do
-            game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("MerchantEvents"):WaitForChild("BuyItem"):FireServer("HalloweenPet")
-            task.wait(10)
-          end
-        end)
-      end
-    end
-})
 
-local EggTab = Window:Tab({
-    Title = "Eggs",
-    Icon = "egg",
-    Locked = false,
-})
+-- CASE ELEMENTS
 
-local selectedEgg = nil
 
-local isHatchingEggs = false
-
-local Dropdown = EggTab:Dropdown({
-    Title = "Select Egg",
+local Dropdown = CaseTab:Dropdown({
+    Title = "Select Case",
     Values = {
       "None",
-      "100K Egg",
-      "Common Egg",
-      "Rare Egg",
-      "Epic Egg",
-      "Ice Egg",
-      "Frozen Egg",
-      "Inferno Egg",
-      "Volcanic Egg",
-      "Magical Egg",
+      "Beginner Case",
+      "Vengful Case",
+      "Void Case",
+      "RGB Toy Case",
+      "The Rock Family",
+      "Crystallic Treasures",
+      "A Sheriff's Equipment!",
+      "Neo Neo Tempus",
+      "Burried Treasure",
+      "Negative Degrees",
+      "My Camping Equipment",
+      "Sunday Delight",
+      "Shroooooooms",
+      "Sakura Case",
+      "Volcanic Case",
+      "Toy Box",
+      "Stealing From The Gods",
+      "Case_18",
+      "Neon Red Dilemma",
+      "The Lost Souls",
+      "Burning Souls",
+      "X Marks The Spot",
+      "Shiny Rocks",
+      "Neo Neo Crazy",
+      "Diamond_Case_3",
+      "Green or Pink?",
+      "Freeeee",
+      "The Lost Treasure",
     },
     Value = "None",
     Callback = function(option) 
-      selectedEgg = eggList[option]
+      selectedCaseValue = caseList[option]
+        print("Category selected: " .. option) 
     end
 })
 
-local Toggle = EggTab:Toggle({
-    Title = "Enable Auto Hatch",
-    Desc = "Starts Auto Hatch",
+local Toggle = CaseTab:Toggle({
+    Title = "Enable Auto Open",
+    Desc = "Works from Anywhere",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
-    Callback = function(state)
-      isHatchingEggs = state
-      while isHatchingEggs do
-        if selectedEgg then
+    Callback = function(state) 
+      isAutoOpeningCase = state
+      while isAutoOpeningCase do
+        if selectedCaseValue then
           local args = {
-            selectedEgg
-            "Max"
+            selectedCaseValue
           }
-          game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("Events"):WaitForChild("BuyEgg"):FireServer(unpack(args))
+          game:GetService("ReplicatedStorage"):WaitForChild("Remotes"):WaitForChild("OpenCase"):FireServer(unpack(args))
         end
         task.wait()
       end
+        print("Toggle Activated" .. tostring(state))
     end
 })
 
+
+
+
+-- COOKING TAB
+
+local CookingTab = Window:Tab({
+  Title = "Cooking",
+  Icon = "chef-hat",
+  Locked = false,
+})
+
+
+-- COOKING ELEMENTS
+
+local Toggle = CookingTab:Toggle({
+    Title = "Auto Cooks Big Fish",
+    Desc = "Must be near Campfire",
+    Icon = "check", -- Optional: use any icon you like
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+        getgenv().autoCookFish = state
+
+        local function getPrompt()
+            return workspace:WaitForChild("World Building"):WaitForChild("Prompts"):FindFirstChild("CookFish"):FindFirstChildOfClass("ProximityPrompt")
+        end
+
+        task.spawn(function()
+            while getgenv().autoCookFish do
+                local prompt = getPrompt()
+                if prompt then
+                    fireproximityprompt(prompt)
+                else
+                    warn("CookFish ProximityPrompt not found.")
+                end
+                task.wait()
+            end
+        end)
+    end
+})
+
+local Button = CookingTab:Button({
+    Title = "Delete Overcooked Fishes (Effect)",
+    Desc = "Permanently removes the Overcooked Fish Effect",
+    Locked = false,
+    Callback = function()
+        local path = game:GetService("ReplicatedStorage")
+            :WaitForChild("Modules")
+            :WaitForChild("Controllers")
+            :WaitForChild("VisualEffectController")
+            :WaitForChild("VisualEffects")
+            :WaitForChild("Part_Providers")
+
+        local overcooked = path:FindFirstChild("Overcooked_Fish")
+        if overcooked then
+            overcooked:Destroy()
+            print("Overcooked Fishes deleted.")
+        else
+            warn("Overcooked Fish not found.")
+        end
+    end
+})
+
+-- PLAYER TAB
+
+
+
+local PlayerTab = Window:Tab({
+  Title = "Player",
+  Icon = "user-round",
+  Locked = false,
+})
+
+
+-- PLAYER ELEMENT
