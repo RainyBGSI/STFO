@@ -93,7 +93,7 @@ local Players = game:GetService("Players")
 
 local LocalPlayer = Players.LocalPlayer
 
-warn("Range Amount = 11")
+warn("Range Amount = 11.5")
 
 -- MAIN TAB
 
@@ -110,7 +110,7 @@ local MainTab = Window:Tab({
 local players = game:GetService("Players")
 local player = players.LocalPlayer
 
-getgenv().Range = 11
+getgenv().Range = 11.5
 getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
