@@ -110,7 +110,7 @@ local MainTab = Window:Tab({
 local players = game:GetService("Players")
 local player = players.LocalPlayer
 
-getgenv().Range = 11.5
+getgenv().Range = 1000
 getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
