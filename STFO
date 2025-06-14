@@ -115,7 +115,7 @@ getgenv().ReachEnabled = false
 
 local Toggle = MainTab:Toggle({
     Title = "Reach",
-    Desc = "Reach / Hitbox Expander",
+    Desc = "UND Reach / Hitbox Expander",
     Icon = "check",
     Type = "Checkbox",
     Default = false,
@@ -176,6 +176,17 @@ local Toggle = MainTab:Toggle({
     end
 })
 
+local Toggle = Tab:Toggle({
+    Title = "Kill All",
+    Desc = "Kills Everyone (Excluding Safezone)",
+    Icon = "check",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state) 
+        print("Toggle Activated" .. tostring(state))
+    end
+})
+
 
 local Toggle = MainTab:Toggle({
     Title = "Disable Notifications",
@@ -190,10 +201,22 @@ local Toggle = MainTab:Toggle({
     end
 })
 
-local Section = Tab:Section({ 
-    Title = "Section",
-    TextXAlignment = "Left",
-    TextSize = 17, -- Default Size
+local Dropdown = Tab:Dropdown({
+    Title = "Select Lag All Method",
+    Values = { "None", "SpamOFCooking", "Prompt Spammer", "PromptDSBlocker", "EffectAS" },
+    Value = "None",
+    Callback = function(option)
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "Start Crash / Lag All",
+    Desc = "More Methods Coming Soon.",
+    Icon = "check",
+    Type = "Checkbox",
+    Default = false,
+    Callback = function(state)
+    end
 })
 
 -- CASES TAB
@@ -330,6 +353,12 @@ local Button = CookingTab:Button({
             warn("Overcooked Fish not found.")
         end
     end
+})
+
+local Tab = Window:Tab({
+    Title = Overpowered",
+    Icon = "code",
+    Locked = false,
 })
 
 -- PLAYER TAB
