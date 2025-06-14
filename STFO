@@ -26,7 +26,7 @@ WindUI:GetTransparency(true)
 -- WINDOW
 
 local Window = WindUI:CreateWindow({
-    Title = "Steal Time Simulator",
+    Title = "Steal Time Simulator [Alpha]",
     Icon = "swords",
     Author = "Script by Rainy",
     Folder = "STS",
@@ -190,7 +190,11 @@ local Toggle = MainTab:Toggle({
     end
 })
 
-
+local Section = Tab:Section({ 
+    Title = "Section",
+    TextXAlignment = "Left",
+    TextSize = 17, -- Default Size
+})
 
 -- CASES TAB
 
