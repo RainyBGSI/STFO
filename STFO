@@ -356,7 +356,7 @@ local Button = CookingTab:Button({
 })
 
 local OPTab = Window:Tab({
-    Title = Overpowered",
+    Title = "Overpowered",
     Icon = "code",
     Locked = false,
 })
