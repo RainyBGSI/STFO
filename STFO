@@ -176,7 +176,7 @@ local Toggle = MainTab:Toggle({
     end
 })
 
-local Toggle = Tab:Toggle({
+local Toggle = MainTab:Toggle({
     Title = "Kill All",
     Desc = "Kills Everyone (Excluding Safezone)",
     Icon = "check",
@@ -201,7 +201,7 @@ local Toggle = MainTab:Toggle({
     end
 })
 
-local Dropdown = Tab:Dropdown({
+local Dropdown = MainTab:Dropdown({
     Title = "Select Lag All Method",
     Values = { "None", "SpamOFCooking", "Prompt Spammer", "PromptDSBlocker", "EffectAS" },
     Value = "None",
@@ -209,7 +209,7 @@ local Dropdown = Tab:Dropdown({
     end
 })
 
-local Toggle = Tab:Toggle({
+local Toggle = MainTab:Toggle({
     Title = "Start Crash / Lag All",
     Desc = "More Methods Coming Soon.",
     Icon = "check",
@@ -355,7 +355,7 @@ local Button = CookingTab:Button({
     end
 })
 
-local Tab = Window:Tab({
+local OPTab = Window:Tab({
     Title = Overpowered",
     Icon = "code",
     Locked = false,
